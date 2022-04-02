@@ -206,6 +206,17 @@ var rMap = function(array, callback) {
 // countKeysInObj(obj, 'r') // 1
 // countKeysInObj(obj, 'e') // 2
 var countKeysInObj = function(obj, key) {
+  var result = 0;
+  for (var property in obj) {
+    if (property === key) {
+      result ++;
+    }
+    var value = obj[property];
+    if (typeof value === 'object') {
+      result += countKeysInObj(value, key);
+    }
+  }
+  return result;
 };
 
 // 23. Write a function that counts the number of times a value occurs in an object.
@@ -214,14 +225,32 @@ var countKeysInObj = function(obj, key) {
 // countValuesInObj(obj, 'e') // 1
 var countValuesInObj = function(obj, value) {
   var result = 0;
-
+  for (var key in obj) {
+    if (obj[key] === value) {
+      result ++;
+    }
+    var element = obj[key];
+    if (typeof element === 'object') {
+      result += countValuesInObj(element, value);
+    }
+  }
   return result;
 };
 
 // 24. Find all keys in an object (and nested objects) by a provided name and rename
 // them to a provided new name while preserving the value stored at that key.
 var replaceKeysInObj = function(obj, oldKey, newKey) {
-
+  for (var key in obj) {
+    if (key === oldKey) {
+      obj[newKey] = obj[key];
+      delete obj[key];
+    }
+    var value = obj[key];
+    if (typeof value === 'object') {
+      replaceKeysInObj(value, oldKey, newKey);
+    }
+  }
+  return obj;
 };
 
 // 25. Get the first n Fibonacci numbers. In the Fibonacci sequence, each subsequent
